@@ -1,0 +1,87 @@
+<!-- patientDashboard.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/patientDashboard.css}">
+
+    <script type="module" th:src="@{/js/render.js}" defer></script>
+    <script type="module" th:src="@{/js/util.js}" defer></script>
+    <script type="module" th:src="@{/js/components/header.js}" defer></script>
+    <script type="module" th:src="@{/js/components/footer.js}" defer></script>
+    <script type="module" th:src="@{/js/patientDashboard.js}" defer></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="wrapper">
+
+        <div id="header"></div>
+
+        <main class="main-content">
+
+            <h2 class="dashboard-title">
+                Patient <span>Dashboard</span>
+            </h2>
+
+            <div class="search-container">
+                <input
+                        type="text"
+                        id="searchBar"
+                        class="search-bar"
+                        placeholder="Search doctor by name..."
+                >
+            </div>
+
+            <div class="filter-wrapper">
+                <select id="timeFilter" class="filter-select">
+                    <option value="all">All Times</option>
+                    <option value="am">AM</option>
+                    <option value="pm">PM</option>
+                </select>
+
+                <select id="specialtyFilter" class="filter-select">
+                    <option value="all">All Specialties</option>
+                    <option value="cardiologist">Cardiologist</option>
+                    <option value="dermatologist">Dermatologist</option>
+                    <option value="neurologist">Neurologist</option>
+                    <option value="pediatrician">Pediatrician</option>
+                    <option value="orthopedic">Orthopedic</option>
+                    <option value="gynecologist">Gynecologist</option>
+                    <option value="psychiatrist">Psychiatrist</option>
+                    <option value="dentist">Dentist</option>
+                    <option value="ophthalmologist">Ophthalmologist</option>
+                    <option value="ent">ENT Specialist</option>
+                    <option value="urologist">Urologist</option>
+                    <option value="oncologist">Oncologist</option>
+                    <option value="gastroenterologist">Gastroenterologist</option>
+                    <option value="general">General Physician</option>
+                </select>
+            </div>
+
+            <div id="content" class="doctor-card-container"></div>
+
+        </main>
+
+        <div id="footer"></div>
+
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+</body>
+</html>
