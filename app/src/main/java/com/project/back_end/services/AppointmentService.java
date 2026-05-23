@@ -46,7 +46,8 @@ package com.project.back_end.services;
 import com.project.back_end.models.Appointment;
 import com.project.back_end.models.Doctor;
 import com.project.back_end.models.Patient;
-
+import com.project.back_end.DTO.AppointmentDTO;
+import java.util.ArrayList;
 import com.project.back_end.repositories.AppointmentRepository;
 import com.project.back_end.repositories.DoctorRepository;
 import com.project.back_end.repositories.PatientRepository;
@@ -269,6 +270,73 @@ public class AppointmentService {
                         start,
                         end
                 );
+    }
+        /* ========================================
+       GET APPOINTMENT DTOS FOR DOCTOR
+    ======================================== */
+
+    @Transactional(readOnly = true)
+    public List<AppointmentDTO> getAppointmentDTOsForDoctor(
+            Long doctorId,
+            LocalDate date,
+            String patientName
+    ) {
+
+        List<Appointment> appointments =
+                getAppointments(
+                        doctorId,
+                        date,
+                        patientName
+                );
+
+        List<AppointmentDTO> dtoList =
+                new ArrayList<>();
+
+        for (Appointment appointment : appointments) {
+
+            AppointmentDTO dto =
+                    new AppointmentDTO();
+
+            dto.setId(
+                    appointment.getId()
+            );
+
+            dto.setDoctorId(
+                    appointment.getDoctor().getId()
+            );
+
+            dto.setDoctorName(
+                    appointment.getDoctor().getName()
+            );
+
+            dto.setPatientId(
+                    appointment.getPatient().getId()
+            );
+
+            dto.setPatientName(
+                    appointment.getPatient().getName()
+            );
+
+            dto.setPatientEmail(
+                    appointment.getPatient().getEmail()
+            );
+
+            dto.setPatientPhone(
+                    appointment.getPatient().getPhone()
+            );
+
+            dto.setAppointmentTime(
+                    appointment.getAppointmentTime()
+            );
+
+            dto.setStatus(
+                    appointment.getStatus()
+            );
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
     /* ========================================

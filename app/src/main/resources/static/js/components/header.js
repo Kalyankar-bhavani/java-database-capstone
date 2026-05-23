@@ -186,6 +186,10 @@ function renderHeader() {
     else if (role === "patient") {
 
         headerContent += `
+            <button id="selectRoleBtn" class="adminBtn">
+                Select Role
+            </button>
+
             <button id="patientLogin" class="adminBtn">
                 Login
             </button>
@@ -281,6 +285,15 @@ function renderHeader() {
 
             window.location.href =
                 "/pages/loggedPatientDashboard.html";
+        });
+    }
+    const selectRoleBtn =
+        document.getElementById("selectRoleBtn");
+
+    if (selectRoleBtn) {
+        selectRoleBtn.addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "/";
         });
     }
 

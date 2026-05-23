@@ -1,4 +1,5 @@
 // patientAppointment.js
+
 import {
     getPatientAppointments
 } from "./services/patientServices.js";
@@ -7,10 +8,14 @@ import {
     cancelAppointment
 } from "./services/appointmentRecordService.js";
 
+import {
+    getDoctors
+} from "./services/doctorServices.js";
+
 let allAppointments = [];
+let allDoctors = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-
     await loadAppointments();
 
     const searchInput = document.getElementById("searchAppointment");
@@ -26,7 +31,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadAppointments() {
-
     const tableBody = document.getElementById("appointmentTableBody");
 
     if (!tableBody) {
@@ -38,23 +42,17 @@ async function loadAppointments() {
     const patientId = localStorage.getItem("patientId");
 
     if (!token || !patientId) {
-
         tableBody.innerHTML = `
             <tr>
-                <td colspan="6">
-                    Please login again.
-                </td>
+                <td colspan="6">Please login again.</td>
             </tr>
         `;
-
         return;
     }
 
     tableBody.innerHTML = `
         <tr>
-            <td colspan="6">
-                Loading appointments...
-            </td>
+            <td colspan="6">Loading appointments...</td>
         </tr>
     `;
 
@@ -64,11 +62,24 @@ async function loadAppointments() {
         "patient"
     );
 
+    allDoctors = await getDoctors();
+
     renderAppointments(allAppointments);
 }
 
-function applyFilters() {
+function getDoctorName(appointment) {
+    if (appointment.doctorName) {
+        return appointment.doctorName;
+    }
 
+    if (appointment.doctor?.name) {
+        return appointment.doctor.name;
+    }
+
+    return "N/A";
+}
+
+function applyFilters() {
     const searchValue =
         document.getElementById("searchAppointment")
             ?.value
@@ -81,9 +92,8 @@ function applyFilters() {
             .toLowerCase() || "all";
 
     const filteredAppointments = allAppointments.filter((appointment) => {
-
         const doctorName =
-            appointment.doctor?.name?.toLowerCase() || "";
+            getDoctorName(appointment).toLowerCase();
 
         const status =
             appointment.status === 1
@@ -105,7 +115,6 @@ function applyFilters() {
 }
 
 function renderAppointments(appointments) {
-
     const tableBody = document.getElementById("appointmentTableBody");
 
     if (!tableBody) return;
@@ -113,24 +122,18 @@ function renderAppointments(appointments) {
     tableBody.innerHTML = "";
 
     if (!appointments || appointments.length === 0) {
-
         tableBody.innerHTML = `
             <tr>
-                <td colspan="6">
-                    No appointments found.
-                </td>
+                <td colspan="6">No appointments found.</td>
             </tr>
         `;
-
         return;
     }
 
     appointments.forEach((appointment) => {
-
         const tr = document.createElement("tr");
 
-        const doctorName =
-            appointment.doctor?.name || "N/A";
+        const doctorName = getDoctorName(appointment);
 
         const date =
             appointment.appointmentTime
@@ -168,17 +171,12 @@ function renderAppointments(appointments) {
         `;
 
         const cancelBtn = tr.querySelector(".cancel-btn");
-
         const updateBtn = tr.querySelector(".update-btn");
 
         if (cancelBtn) {
-
             cancelBtn.addEventListener("click", async () => {
-
                 const token = localStorage.getItem("token");
-
-                const patientId =
-                    localStorage.getItem("patientId");
+                const patientId = localStorage.getItem("patientId");
 
                 const result = await cancelAppointment(
                     appointment.id,
@@ -187,22 +185,16 @@ function renderAppointments(appointments) {
                 );
 
                 if (result.success) {
-
                     alert("Appointment cancelled.");
-
                     await loadAppointments();
-
                 } else {
-
                     alert(result.message || "Cancel failed.");
                 }
             });
         }
 
         if (updateBtn) {
-
             updateBtn.addEventListener("click", () => {
-
                 localStorage.setItem(
                     "selectedAppointment",
                     JSON.stringify(appointment)

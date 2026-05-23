@@ -3,32 +3,41 @@ import { API_BASE_URL } from "../config/config.js";
 const APPOINTMENT_API = `${API_BASE_URL}/appointments`;
 const PATIENT_API = `${API_BASE_URL}/patient`;
 
-export async function getAllAppointments(doctorId, date, patientName = "all", token) {
+
+export async function getAllAppointments(doctorId, date, patientName, token) {
     try {
-        const safePatientName =
-            patientName && patientName.trim() !== "" ? patientName.trim() : "all";
+        const searchName = patientName && patientName.trim() !== ""
+            ? patientName.trim()
+            : "all";
 
         const response = await fetch(
-            `${APPOINTMENT_API}/${doctorId}/${date}/${encodeURIComponent(safePatientName)}/${token}`
+            `${APPOINTMENT_API}/${doctorId}/${date}/${searchName}/${token}`
         );
+
+        if (!response.ok) {
+            console.error("Failed to fetch doctor appointments");
+            return [];
+        }
 
         const data = await response.json();
 
         console.log("Doctor appointments response:", data);
 
-        if (!response.ok) {
-            console.error(data.message || "Failed to fetch appointments");
-            return [];
+        if (Array.isArray(data)) {
+            return data;
         }
 
-        return data.appointments || [];
+        if (data.appointments && Array.isArray(data.appointments)) {
+            return data.appointments;
+        }
+
+        return [];
 
     } catch (error) {
-        console.error("getAllAppointments error:", error);
+        console.error("Error loading doctor appointments:", error);
         return [];
     }
 }
-
 export async function bookAppointment(appointment, token) {
     try {
         const response = await fetch(`${APPOINTMENT_API}/${token}`, {

@@ -85,7 +85,7 @@ public class AppointmentController {
         }
 
         return ResponseEntity.ok(
-                appointmentService.getAppointments(
+                appointmentService.getAppointmentDTOsForDoctor(
                         doctorId,
                         LocalDate.parse(date),
                         patientName

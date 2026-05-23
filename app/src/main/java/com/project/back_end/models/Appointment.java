@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import jakarta.persistence.Id;
-
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -92,7 +90,7 @@ public class Appointment {
     @NotNull(message = "Patient cannot be null")
     private Patient patient;
 
-    @Future(message = "Appointment time must be in the future")
+    @NotNull(message = "Appointment time cannot be null")
     private LocalDateTime appointmentTime;
 
     @NotNull(message = "Status cannot be null")
